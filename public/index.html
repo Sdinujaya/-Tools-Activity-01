@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greeting App</title>
+</head>
+
+<body>
+
+  <!-- Form View -->
+  <div id="formView">
+    <h1>Welcome</h1>
+    <p>Please enter your name to receive a greeting.</p>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <br><br>
+    <button onclick="submitName()">Get Greeting</button>
+  </div>
+
+  <!-- Greeting View -->
+  <div id="greetingView" style="display:none;">
+    <h1 id="greetingText"></h1>
+    <br>
+    <button onclick="goBack()">Go Back</button>
+  </div>
+
+  <script>
+    function submitName() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) return;
+
+      fetch('/greet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('greetingText').textContent = `Hello, ${data.name}!`;
+        document.getElementById('formView').style.display = 'none';
+        document.getElementById('greetingView').style.display = 'block';
+      });
+    }
+
+    function goBack() {
+      document.getElementById('nameInput').value = '';
+      document.getElementById('formView').style.display = 'block';
+      document.getElementById('greetingView').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
